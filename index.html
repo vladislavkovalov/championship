@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>League Table</title>
+
+            <link rel="stylesheet" href="style.css">
+
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        </head>
+<body>
+<div class="container">
+    <button id="start" data-current-week="1">Start Simulation</button>
+    <div class="content">
+        <div class="result-table">
+            <table id="result" border="1" cellpadding="0" cellspacing="0">
+            </table>
+            <div class="buttons">
+                <button id="play-all" data-current-week="all">Play All</button>
+                <button id="next-week" data-current-week="2">Next Week</button>
+            </div>
+        </div>
+        <div class="predictions-table">
+            <table id="result2" border="1" cellpadding="0" cellspacing="0">
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+<script>
+    $(document).ready(function(){
+
+        $("button").click(function(e) {
+            let elem = e.target;
+            let data = {};
+
+
+            if(elem.id == 'start') {
+                $("#start").hide();
+                $(".content").show();
+
+                data = {
+                    'current_week': $(elem).data('current-week'),
+                    teams: {
+                        1: {
+                            'name' : 'Arsenal',
+                        },
+                        2: {
+                            'name' : 'Liverpool',
+                        },
+                        3: {
+                            'name' : 'Real Madrid',
+                        },
+                        4: {
+                            'name' : 'Manchester City',
+                        }
+                    }
+                };
+            } else {
+                let teams = {};
+
+                $("tr").each(function() {
+                    let id = $(this).attr("id");
+
+                    if(!id) {
+                        return;
+                    }
+
+                    teams[id] = {};
+
+                    $(this).find('td').each (function() {
+                        if(!$(this).data('item')) {
+                            return;
+                        }
+                        teams[id][$(this).data('item')] = $(this).html();
+                    });
+                });
+
+                data = {
+                    'current_week': $(elem).data('current-week'),
+                    teams: teams
+                };
+            }
+
+            let ajax = $.ajax({
+                method: "POST",
+                url: "controller.php",
+                dataType: 'html',
+                data: data,
+            });
+
+            ajax.done(function(result) {
+                let res = JSON.parse(result);
+                $('#result').html(res[1]);
+                $('#result2').html(res[2]);
+                $('#next-week').data('current-week', res['next_week']);
+            });
+        });
+
+    });
+</script>
+</title>
+</head>
+<body>
+
+</body>
+</html>

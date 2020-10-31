@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.content {
+    display: none;
+}
+
+th, td {
+    padding: 5px;
+}
+
+.buttons {
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.predictions-table {
+    display: flex;
+    justify-content: center;
+}
